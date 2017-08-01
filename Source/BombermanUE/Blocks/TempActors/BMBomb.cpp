@@ -4,27 +4,28 @@
 #include "BMExplosionBlock.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "../BMBLockGrid.h" 
 
 
 ABMBomb::ABMBomb(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	TimeToEnd = 2;
 	ConstructorHelpers::FObjectFinderOptional<UStaticMesh> sphere = TEXT("/Game/Meshes/Sphere.Sphere");
-	ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> RedMaterial = TEXT("/Game/Meshes/BlackMaterial.BlackMaterial");
+	ConstructorHelpers::FObjectFinderOptional<UMaterial> RedMaterial = TEXT("/Game/Meshes/BlackMaterial.BlackMaterial");
 	BlockMesh->SetStaticMesh(sphere.Get());
 
 	BlockMesh->SetMaterial(0, RedMaterial.Get());
+
 }
 
 void ABMBomb::EndEvent()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BOMB!"));
 
 	if (HasAuthority())
 	{
-		//TODO Explosion
-		Destroy();
-
+		blocks->Explosion(GetPosition(), DamageRadius);
 	}
 
 	Super::EndEvent();
@@ -38,11 +39,25 @@ void ABMBomb::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	const FHitResult &SweepResult)
 {
 
-
 	if (OtherActor->GetClass()->IsChildOf(ABMExplosionBlock::StaticClass()))
 	{
-		//TODO Explosion
-		Destroy();	
+		EndEvent();
 	}
 }
 
+
+
+bool ABMBomb::OnTouchedByExplosion()
+{
+	blocks->Explosion(GetPosition(), DamageRadius);
+
+	return true;
+
+}
+
+
+// Called every frame
+void ABMBomb::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}

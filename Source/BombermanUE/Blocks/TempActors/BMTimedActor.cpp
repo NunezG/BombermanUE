@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BMTimedActor.h"
-
-
+#include "./BMGameMode.h"
 
 ABMTimedActor::ABMTimedActor(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -11,6 +10,15 @@ ABMTimedActor::ABMTimedActor(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 	BlockMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	GetBlockMesh()->OnComponentBeginOverlap.AddDynamic(this, &ABMTimedActor::BeginOverlap);
+
+}
+
+
+
+void ABMTimedActor::BeginPlay()
+{
+	Super::BeginPlay();
+	blocks = ((ABMGameMode*)GetWorld()->GetAuthGameMode())->BlockGrid;
 
 }
 
@@ -29,5 +37,15 @@ void ABMTimedActor::Tick(float DeltaTime)
 
 void ABMTimedActor::EndEvent()
 {
+	blocks->RemoveBlock(Position);
 	Destroy();
+
 }
+
+
+
+bool ABMTimedActor::OnTouchedByExplosion()
+{
+	Destroy();
+	return true;
+ }

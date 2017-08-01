@@ -9,6 +9,4 @@ ABMHardWall::ABMHardWall(const FObjectInitializer& ObjectInitializer)
 	ConstructorHelpers::FObjectFinder<UMaterialInstance> BlueMaterial = TEXT("/Game/Meshes/BlueMaterial.BlueMaterial");
 
 	BlockMesh->SetMaterial(0, BlueMaterial.Object);
-	BlockMesh->SetupAttachment(DummyRoot);
-
 }

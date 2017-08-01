@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "../Blocks/TempActors/BMBomb.h"
+#include "./DestructibleInterface.h"
 
 #include "BMCharacter.generated.h"
 
 
 
 UCLASS()
-class BOMBERMANUE_API ABMCharacter : public ACharacter
+class BOMBERMANUE_API ABMCharacter : public ACharacter, public IDestructible
 {
 	GENERATED_UCLASS_BODY()
 
@@ -55,6 +56,7 @@ public:
 	/** cleanup inventory */
 	virtual void Destroyed() override;
 
+	virtual bool OnTouchedByExplosion() override;
 
 private:
 

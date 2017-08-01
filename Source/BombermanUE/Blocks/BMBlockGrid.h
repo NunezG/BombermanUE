@@ -25,6 +25,8 @@ public:
 
 	ABMBaseActor* SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMBaseActor> blockToSpawn);
 
+	void RemoveBlock(FVector2D blockPosition);
+
 	/** Returns Actor found **/
 	FORCEINLINE ABMBaseActor* CheckPosition(FVector2D position) const { return *(blocksMap.Find(position)); }
 
@@ -34,16 +36,12 @@ public:
 	UPROPERTY(Category = Grid, VisibleAnywhere)
 		TMap<FVector2D, ABMBaseActor*> blocksMap;
 
-	bool TestBlock(FVector2D position);
+	void Explosion(FVector2D originPosition, int DamageRadius);
 
-	bool DropItem(FVector2D position);
-
-	void BombExplodes(ABMBomb* bomb);
-
+	bool ReachesBlock(FVector2D position);
 
 	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
 		TArray<TSubclassOf<ABMPickupItem>> Pickups;
-
 private:
 
 	/** Dummy root component */

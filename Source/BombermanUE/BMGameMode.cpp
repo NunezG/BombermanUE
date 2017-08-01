@@ -23,5 +23,5 @@ ABMGameMode::ABMGameMode(const FObjectInitializer& ObjectInitializer) : Super(Ob
 
 void ABMGameMode::SpawnABomb(FVector2D position)
 {
-	BlockGridd->blocksMap.Add(position, BlockGridd->SpawnBlock(position, ABMBomb::StaticClass()));
+	BlockGrid->blocksMap.Add(position, BlockGrid->SpawnBlock(position, ABMBomb::StaticClass()));
 }

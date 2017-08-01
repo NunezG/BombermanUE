@@ -20,7 +20,7 @@ class BOMBERMANUE_API ABMGameMode : public AGameModeBase
 public:
 
 	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadWrite)
-		ABMBlockGrid* BlockGridd;
+		ABMBlockGrid* BlockGrid;
 
 
 	void SpawnABomb(FVector2D position);

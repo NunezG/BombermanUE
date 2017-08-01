@@ -4,9 +4,9 @@
 #include "BMHardWall.h"
 #include "Engine/World.h"
 #include "TempActors/BMBomb.h"
-#include "TempActors/BMPickupItem.h"
 #include "TempActors/BMExplosionBlock.h"
-
+#include "BMBlockGrid.h"
+#include "DestructibleInterface.h"
 #include "BMBaseActor.h"
 
 // Sets default values
@@ -74,7 +74,6 @@ void ABMBlockGrid::BeginPlay()
 	}
 }
 
-
 ABMBaseActor* ABMBlockGrid::SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMBaseActor> blockToSpawn)
 {
 
@@ -85,6 +84,7 @@ ABMBaseActor* ABMBlockGrid::SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMB
 	// Spawn a block
 	ABMBaseActor* newBlock = (ABMBaseActor*)GetWorld()->SpawnActor(blockToSpawn.Get(), &BlockLocation, &rotation);
 
+	if (newBlock)
 	newBlock->SetPosition(blockPosition);
 
 
@@ -92,130 +92,107 @@ ABMBaseActor* ABMBlockGrid::SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMB
 }
 
 
-
-
-bool ABMBlockGrid::TestBlock(FVector2D position)
+void ABMBlockGrid::RemoveBlock(FVector2D blockPosition)
 {
-
 	ABMBaseActor** actor;
 
-	actor = blocksMap.Find(position);
+	actor = blocksMap.Find(blockPosition);
 
-	if (!actor)
-		SpawnBlock(position, ABMExplosionBlock::StaticClass());
-	else if ((*actor)->GetClass() == ABMDestructibleWall::StaticClass())
+	if (actor)
 	{
-		blocksMap.Remove(position);
+		blocksMap.Remove(blockPosition);
 
 		(*actor)->Destroy();
-
-		DropItem(position);
-
 	}
-	else if ((*actor)->GetClass()->IsChildOf(ABMPickupItem::StaticClass()))
-	{
-		blocksMap.Remove(position);
-
-		(*actor)->Destroy();
-
-
-	}
-	else if ((*actor)->GetClass()->IsChildOf(ABMBomb::StaticClass()))
-	{
-		ABMBomb* bomb = (ABMBomb*)*actor;
-
-		BombExplodes(bomb);
-	}
-
-	else if ((*actor)->GetClass() == ABMHardWall::StaticClass())
-	{
-
-		return false;
-
-	}
-
-
-	return true;
-
 }
 
 
-
-bool ABMBlockGrid::DropItem(FVector2D position)
+void ABMBlockGrid::Explosion(FVector2D originPosition, int DamageRadius)
 {
-	float randomNum = FMath::SRand();
+	FVector2D offset = originPosition;
 
-	if (randomNum > 0.5f)
-	{
+	RemoveBlock(originPosition);
 
-		float randomselector = FMath::SRand();
-
-		int pickupPos = FMath::RoundToInt(randomselector * (Pickups.Num() - 1));
-
-		blocksMap.Add(position, SpawnBlock(position, Pickups[pickupPos].Get()));
-
-		return true;
-	}
-
-	return false;
-}
-
-
-
-void ABMBlockGrid::BombExplodes(ABMBomb* bomb)
-{
-
-	blocksMap.Remove(bomb->GetPosition());
-
-	FVector2D offset = bomb->GetPosition();
-
-	for (int i = 0; i <= bomb->DamageRadius; i++)
+	for (int i = 0; i <= DamageRadius; i++)
 	{
 
 		offset.X++;
 
-		if (!TestBlock(offset))
+		if (!ReachesBlock(offset))
 			break;
 	}
 
-	offset = bomb->GetPosition();
+	offset = originPosition;
 
-	for (int i = 0; i >= -bomb->DamageRadius; i--)
+	for (int i = 0; i >= -DamageRadius; i--)
 	{
 
 		offset.X--;
 
-		if (!TestBlock(offset))
+		if (!ReachesBlock(offset))
 			break;
 	}
 
-	offset = bomb->GetPosition();
+	offset = originPosition;
 
-	for (int i = 0; i <= bomb->DamageRadius; i++)
+	for (int i = 0; i <= DamageRadius; i++)
 	{
 
 		offset.Y++;
 
-		if (!TestBlock(offset))
+		if (!ReachesBlock(offset))
 			break;
 	}
 
-	offset = bomb->GetPosition();
+	offset = originPosition;
 
-	for (int i = 0; i >= -bomb->DamageRadius; i--)
+	for (int i = 0; i >= -DamageRadius; i--)
 	{
 
 		offset.Y--;
 
-		if (!TestBlock(offset))
+		if (!ReachesBlock(offset))
 			break;
 	}
-
-
-	bomb->Destroy();
 
 	FString rebuild = "RebuildNavigation";
 
 	GetWorld()->Exec(GetWorld(), *rebuild);
+
+}
+
+
+bool ABMBlockGrid::ReachesBlock(FVector2D TargetPosition)
+{
+	ABMBaseActor** actor;
+
+	actor = blocksMap.Find(TargetPosition);
+
+	if (!actor)
+	{
+		SpawnBlock(TargetPosition, ABMExplosionBlock::StaticClass());
+		return true;
+	}
+	else 
+	{
+		IDestructible* destr = Cast<IDestructible>(*actor);
+
+		if (destr)
+		{
+
+			destr->OnTouchedByExplosion();
+
+			if ((*actor)->GetClass() == ABMDestructibleWall::StaticClass())
+			{
+				//stops the bomb blast
+				return false;
+			}
+			
+		}
+		else return false;
+	}
+
+	//keeps the bomb blast
+	return true;
 
 }

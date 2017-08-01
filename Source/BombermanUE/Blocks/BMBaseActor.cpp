@@ -7,7 +7,8 @@
 ABMBaseActor::ABMBaseActor(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	//Replication for multiplayer
 	bReplicates = true;
@@ -24,4 +25,15 @@ ABMBaseActor::ABMBaseActor(const FObjectInitializer& ObjectInitializer)
 	BlockMesh->SetStaticMesh(cube.Get());
 	BlockMesh->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
+
+	BlockMesh->SetupAttachment(DummyRoot);
+
+}
+
+
+// Called every frame
+void ABMBaseActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }

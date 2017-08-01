@@ -104,6 +104,13 @@ void ABMCharacter::DropABomb_Implementation()
 		((ABMGameMode*)GetWorld()->GetAuthGameMode())->SpawnABomb(BlockLocation);
 }
 
+bool ABMCharacter::OnTouchedByExplosion()
+{
+	Destroy();
+	return true;
+
+}
+
 void ABMCharacter::MoveForward(float Val)
 {
 	if ((Controller != NULL) && (Val != 0.0f))
@@ -117,6 +124,7 @@ void ABMCharacter::MoveForward(float Val)
 		AddMovementInput(Direction, Val);
 	}
 }
+
 
 void ABMCharacter::MoveRight(float Val)
 {

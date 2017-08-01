@@ -30,4 +30,12 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult &SweepResult) override;
+
+
+
+	virtual bool OnTouchedByExplosion() override;
+
+	virtual void Tick(float DeltaTime) override;
+
 };
+

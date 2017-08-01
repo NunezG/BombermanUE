@@ -4,21 +4,32 @@
 
 #include "../BMBaseActor.h"
 #include "GameFramework/Character.h"
+//#include "./BMGameMode.h"
+//#include "BMBlockGrid.h"
+#include "./DestructibleInterface.h"
 #include "BMTimedActor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BOMBERMANUE_API ABMTimedActor : public ABMBaseActor
+class BOMBERMANUE_API ABMTimedActor : public ABMBaseActor, public IDestructible
 {
 	GENERATED_UCLASS_BODY()
 	
-protected:
+public:
+
+	UPROPERTY(VisibleAnywhere)
 	float Timer = 0;
+
 	float TimeToEnd = 2;
 
+	UPROPERTY(VisibleAnywhere)
+	class ABMBlockGrid* blocks;
+
 	virtual void EndEvent();
+
+	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 	
@@ -31,4 +42,7 @@ protected:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult &SweepResult) {};
+
+	virtual bool OnTouchedByExplosion() override;
+
 };

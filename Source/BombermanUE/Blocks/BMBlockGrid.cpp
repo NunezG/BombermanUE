@@ -65,7 +65,7 @@ void ABMBlockGrid::BeginPlay()
 				else {
 					float randomNumber = FMath::SRand();
 
-					if (randomNumber > 0.7)
+					if (randomNumber > 0.8)
 					{
 						AddActor(vec, SpawnBlock(vec, ABMDestructibleWall::StaticClass()));
 					}
@@ -92,8 +92,8 @@ ABMBaseActor* ABMBlockGrid::SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMB
 	// Spawn a block
 	ABMBaseActor* newBlock = (ABMBaseActor*)GetWorld()->SpawnActor(blockToSpawn.Get(), &BlockLocation, &rotation);
 
-	if (newBlock)
-	newBlock->SetPosition(blockPosition);
+	if (newBlock != nullptr)
+		newBlock->SetPosition(blockPosition);
 
 
 	return newBlock;

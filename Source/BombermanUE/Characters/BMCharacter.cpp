@@ -98,13 +98,18 @@ void ABMCharacter::DropABomb_Implementation()
 {
 	if (availableBombs > 0)
 	{
-		availableBombs--;
+		if (!blocks) blocks = ((ABMGameMode*)GetWorld()->GetAuthGameMode())->BlockGrid;
 
 		// Make postion vector, offset from Grid location
 		const FVector2D BlockLocation = FVector2D(FMath::RoundToInt(GetActorLocation().X / 100), FMath::RoundToInt(GetActorLocation().Y / 100));
 
-		if (!blocks) blocks = ((ABMGameMode*)GetWorld()->GetAuthGameMode())->BlockGrid;
+		ABMBaseActor** actor =  blocks->blocksMap.Find(BlockLocation);
 
+		if (actor && (*actor)->StaticClass() == ABMBomb::StaticClass())
+			return;
+
+
+		availableBombs--;
 
 		ABMBaseActor* spawnedActor = blocks->SpawnBlock(BlockLocation, ABMBomb::StaticClass());
 		

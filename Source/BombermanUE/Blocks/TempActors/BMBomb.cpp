@@ -23,7 +23,7 @@ void ABMBomb::EndEvent()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BOMB!"));
 
-	if (HasAuthority())
+	if (HasAuthority() && ((ABMCharacter*)GetOwner()))
 	{
 		((ABMCharacter*)GetOwner())->availableBombs++;
 

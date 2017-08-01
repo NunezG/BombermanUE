@@ -36,7 +36,7 @@ bool ABMDestructibleWall::DropItem(FVector2D position)
 {
 	float randomNum = FMath::SRand();
 
-	if (randomNum > 0.5f && blocks->Pickups.Num() > 0)
+	if (randomNum > 0.7f && blocks->Pickups.Num() > 0)
 	{
 
 		float randomselector = FMath::SRand();

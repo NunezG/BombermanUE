@@ -15,7 +15,7 @@ MILESTONES:
 		o More bombs
 		o Faster run speed
 
-	• Bomb placing by the player (0.5h)
+	• Bomb placing by the player (2h)
 		o Player is starting with only one bomb that can be active at a time
 		o Placing a bomb subtracts one from the count, when the bomb explodes the count goes up again
 		o Amount is upgradable with pickups

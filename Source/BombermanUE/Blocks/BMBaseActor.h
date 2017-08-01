@@ -5,6 +5,8 @@
 #include "BombermanUE.h"
 #include "GameFramework/Actor.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Materials/MaterialInstance.h"
+#include "Components/StaticMeshComponent.h"
 #include "BMBaseActor.generated.h"
 
 UCLASS(minimalapi)

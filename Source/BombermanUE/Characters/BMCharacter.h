@@ -32,18 +32,14 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
 	UFUNCTION(Server, Reliable, WithValidation)
-	void DropABomb();
-
-public:	
+		void DropABomb();
 
 	virtual void BeginDestroy() override;
 
@@ -59,17 +55,17 @@ public:
 	virtual bool OnTouchedByExplosion() override;
 
 
-	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = Bomb, VisibleAnywhere, BlueprintReadWrite)
 		int availableBombs = 1;
+
+
+	UPROPERTY(Category = Bomb, VisibleAnywhere, BlueprintReadWrite)
+		int bombRadius = 1;
 
 private:
 
 	UPROPERTY(VisibleAnywhere)
 		class ABMBlockGrid* blocks;
-
-	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	int speedLevel;
-
 
 	/**
 	* Move forward/back

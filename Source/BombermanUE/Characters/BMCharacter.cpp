@@ -14,8 +14,6 @@
 ABMCharacter::ABMCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 ,	availableBombs(1)
-, speedLevel(1)
-
 {
 	// Don't rotate character to camera direction
 	bUseControllerRotationPitch = false;
@@ -168,7 +166,6 @@ void ABMCharacter::PostInitializeComponents()
 	{
 		//Health = GetMaxHealth();
 		availableBombs = 1;
-		speedLevel = 1;
 	}
 
 }

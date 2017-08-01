@@ -17,9 +17,6 @@ class BOMBERMANUE_API ABMBomb : public ABMTimedActor
 
 public:
 
-	int DamageRadius = 4;
-	float DeflagrationTime = 1;
-
 	virtual void EndEvent() override;
 
 	// Overlap
@@ -36,8 +33,6 @@ public:
 	virtual bool OnTouchedByExplosion() override;
 
 	virtual void Tick(float DeltaTime) override;
-
-	ACharacter* Owner;
 
 };
 

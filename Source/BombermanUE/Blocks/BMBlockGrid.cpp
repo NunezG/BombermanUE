@@ -121,7 +121,7 @@ void ABMBlockGrid::Explosion(FVector2D originPosition, int DamageRadius)
 
 	RemoveBlock(originPosition);
 
-	for (int i = 0; i <= DamageRadius; i++)
+	for (int i = 0; i < DamageRadius; i++)
 	{
 
 		offset.X++;
@@ -132,7 +132,7 @@ void ABMBlockGrid::Explosion(FVector2D originPosition, int DamageRadius)
 
 	offset = originPosition;
 
-	for (int i = 0; i >= -DamageRadius; i--)
+	for (int i = 0; i > -DamageRadius; i--)
 	{
 
 		offset.X--;
@@ -143,7 +143,7 @@ void ABMBlockGrid::Explosion(FVector2D originPosition, int DamageRadius)
 
 	offset = originPosition;
 
-	for (int i = 0; i <= DamageRadius; i++)
+	for (int i = 0; i < DamageRadius; i++)
 	{
 
 		offset.Y++;
@@ -154,7 +154,7 @@ void ABMBlockGrid::Explosion(FVector2D originPosition, int DamageRadius)
 
 	offset = originPosition;
 
-	for (int i = 0; i >= -DamageRadius; i--)
+	for (int i = 0; i > -DamageRadius; i--)
 	{
 
 		offset.Y--;

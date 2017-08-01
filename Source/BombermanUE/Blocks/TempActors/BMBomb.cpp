@@ -27,7 +27,7 @@ void ABMBomb::EndEvent()
 	{
 		((ABMCharacter*)GetOwner())->availableBombs++;
 
-		blocks->Explosion(GetPosition(), DamageRadius);
+		blocks->Explosion(GetPosition(), ((ABMCharacter*)GetOwner())->bombRadius);
 	}
 
 	Super::EndEvent();
@@ -51,7 +51,7 @@ void ABMBomb::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 bool ABMBomb::OnTouchedByExplosion()
 {
-	blocks->Explosion(GetPosition(), DamageRadius);
+	EndEvent();
 
 	return true;
 

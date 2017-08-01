@@ -14,7 +14,6 @@
 ABMCharacter::ABMCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 ,	availableBombs(1)
-, BombBlastLevel(1)
 , speedLevel(1)
 
 {
@@ -52,6 +51,7 @@ ABMCharacter::ABMCharacter(const FObjectInitializer& ObjectInitializer)
 // Called when the game starts or when spawned
 void ABMCharacter::BeginPlay()
 {
+
 	Super::BeginPlay();
 	
 }
@@ -98,10 +98,27 @@ bool ABMCharacter::DropABomb_Validate()
 
 void ABMCharacter::DropABomb_Implementation()
 {
+	if (availableBombs > 0)
+	{
+		availableBombs--;
+
 		// Make postion vector, offset from Grid location
 		const FVector2D BlockLocation = FVector2D(FMath::RoundToInt(GetActorLocation().X / 100), FMath::RoundToInt(GetActorLocation().Y / 100));
+
+		if (!blocks) blocks = ((ABMGameMode*)GetWorld()->GetAuthGameMode())->BlockGrid;
+
+
+		ABMBaseActor* spawnedActor = blocks->SpawnBlock(BlockLocation, ABMBomb::StaticClass());
 		
-		((ABMGameMode*)GetWorld()->GetAuthGameMode())->SpawnABomb(BlockLocation);
+		if (spawnedActor)
+		{
+			blocks->blocksMap.Add(BlockLocation, spawnedActor);
+
+			spawnedActor->SetOwner(this);
+		}
+	}
+
+	
 }
 
 bool ABMCharacter::OnTouchedByExplosion()
@@ -151,7 +168,6 @@ void ABMCharacter::PostInitializeComponents()
 	{
 		//Health = GetMaxHealth();
 		availableBombs = 1;
-		BombBlastLevel = 1;
 		speedLevel = 1;
 	}
 

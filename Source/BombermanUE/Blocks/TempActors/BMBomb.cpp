@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "../BMBLockGrid.h" 
-
+#include "./Characters/BMCharacter.h"
 
 ABMBomb::ABMBomb(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -16,7 +16,7 @@ ABMBomb::ABMBomb(const FObjectInitializer& ObjectInitializer)
 	BlockMesh->SetStaticMesh(sphere.Get());
 
 	BlockMesh->SetMaterial(0, RedMaterial.Get());
-
+	
 }
 
 void ABMBomb::EndEvent()
@@ -25,6 +25,8 @@ void ABMBomb::EndEvent()
 
 	if (HasAuthority())
 	{
+		((ABMCharacter*)GetOwner())->availableBombs++;
+
 		blocks->Explosion(GetPosition(), DamageRadius);
 	}
 

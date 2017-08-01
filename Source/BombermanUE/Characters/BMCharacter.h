@@ -58,13 +58,14 @@ public:
 
 	virtual bool OnTouchedByExplosion() override;
 
+
+	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		int availableBombs = 1;
+
 private:
 
-	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	int availableBombs;
-
-	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	int BombBlastLevel;
+	UPROPERTY(VisibleAnywhere)
+		class ABMBlockGrid* blocks;
 
 	UPROPERTY(Category = Bomb, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int speedLevel;

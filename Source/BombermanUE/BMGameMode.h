@@ -23,8 +23,4 @@ public:
 		ABMBlockGrid* BlockGrid;
 
 
-	void SpawnABomb(FVector2D position);
-
-
-
 };

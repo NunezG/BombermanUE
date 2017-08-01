@@ -3,6 +3,10 @@
 #include "BMBlockGrid.h"
 #include "BMHardWall.h"
 #include "Engine/World.h"
+#include "TempActors/BMBomb.h"
+#include "TempActors/BMPickupItem.h"
+#include "TempActors/BMExplosionBlock.h"
+
 #include "BMBaseActor.h"
 
 // Sets default values
@@ -85,4 +89,133 @@ ABMBaseActor* ABMBlockGrid::SpawnBlock(FVector2D blockPosition, TSubclassOf<ABMB
 
 
 	return newBlock;
+}
+
+
+
+
+bool ABMBlockGrid::TestBlock(FVector2D position)
+{
+
+	ABMBaseActor** actor;
+
+	actor = blocksMap.Find(position);
+
+	if (!actor)
+		SpawnBlock(position, ABMExplosionBlock::StaticClass());
+	else if ((*actor)->GetClass() == ABMDestructibleWall::StaticClass())
+	{
+		blocksMap.Remove(position);
+
+		(*actor)->Destroy();
+
+		DropItem(position);
+
+	}
+	else if ((*actor)->GetClass()->IsChildOf(ABMPickupItem::StaticClass()))
+	{
+		blocksMap.Remove(position);
+
+		(*actor)->Destroy();
+
+
+	}
+	else if ((*actor)->GetClass()->IsChildOf(ABMBomb::StaticClass()))
+	{
+		ABMBomb* bomb = (ABMBomb*)*actor;
+
+		BombExplodes(bomb);
+	}
+
+	else if ((*actor)->GetClass() == ABMHardWall::StaticClass())
+	{
+
+		return false;
+
+	}
+
+
+	return true;
+
+}
+
+
+
+bool ABMBlockGrid::DropItem(FVector2D position)
+{
+	float randomNum = FMath::SRand();
+
+	if (randomNum > 0.5f)
+	{
+
+		float randomselector = FMath::SRand();
+
+		int pickupPos = FMath::RoundToInt(randomselector * (Pickups.Num() - 1));
+
+		blocksMap.Add(position, SpawnBlock(position, Pickups[pickupPos].Get()));
+
+		return true;
+	}
+
+	return false;
+}
+
+
+
+void ABMBlockGrid::BombExplodes(ABMBomb* bomb)
+{
+
+	blocksMap.Remove(bomb->GetPosition());
+
+	FVector2D offset = bomb->GetPosition();
+
+	for (int i = 0; i <= bomb->DamageRadius; i++)
+	{
+
+		offset.X++;
+
+		if (!TestBlock(offset))
+			break;
+	}
+
+	offset = bomb->GetPosition();
+
+	for (int i = 0; i >= -bomb->DamageRadius; i--)
+	{
+
+		offset.X--;
+
+		if (!TestBlock(offset))
+			break;
+	}
+
+	offset = bomb->GetPosition();
+
+	for (int i = 0; i <= bomb->DamageRadius; i++)
+	{
+
+		offset.Y++;
+
+		if (!TestBlock(offset))
+			break;
+	}
+
+	offset = bomb->GetPosition();
+
+	for (int i = 0; i >= -bomb->DamageRadius; i--)
+	{
+
+		offset.Y--;
+
+		if (!TestBlock(offset))
+			break;
+	}
+
+
+	bomb->Destroy();
+
+	FString rebuild = "RebuildNavigation";
+
+	GetWorld()->Exec(GetWorld(), *rebuild);
+
 }

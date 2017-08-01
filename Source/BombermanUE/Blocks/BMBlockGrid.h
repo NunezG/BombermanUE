@@ -6,6 +6,9 @@
 #include "BMDestructibleWall.h"
 #include "BMHardWall.h"
 #include "Map.h"
+#include "TempActors/BMPickupItem.h"
+#include "TempActors/BMBomb.h"
+
 #include "BMBlockGrid.generated.h"
 
 UCLASS()
@@ -27,6 +30,20 @@ public:
 
 	FORCEINLINE void AddActor(FVector2D position, ABMBaseActor* actor) { blocksMap.Add(position, actor); }
 
+	//The blocks on the grid
+	UPROPERTY(Category = Grid, VisibleAnywhere)
+		TMap<FVector2D, ABMBaseActor*> blocksMap;
+
+	bool TestBlock(FVector2D position);
+
+	bool DropItem(FVector2D position);
+
+	void BombExplodes(ABMBomb* bomb);
+
+
+	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
+		TArray<TSubclassOf<ABMPickupItem>> Pickups;
+
 private:
 
 	/** Dummy root component */
@@ -45,9 +62,7 @@ private:
 	UPROPERTY(Category = Grid, EditDefaultsOnly)
 		float BlockSpacing;
 
-	//The blocks on the grid
-	UPROPERTY(Category = Grid, VisibleAnywhere)
-		TMap<FVector2D, ABMBaseActor*> blocksMap;
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

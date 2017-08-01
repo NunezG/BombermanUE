@@ -28,8 +28,6 @@ protected:
 
 public:	
 
-	virtual void Tick(float DeltaTime) override;
-
 	/** Returns Position **/
 	FORCEINLINE struct FVector2D GetPosition() const { return Position; }
 

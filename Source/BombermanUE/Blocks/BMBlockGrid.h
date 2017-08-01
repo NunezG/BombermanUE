@@ -42,6 +42,9 @@ public:
 
 	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
 		TArray<TSubclassOf<ABMPickupItem>> Pickups;
+
+	UPROPERTY(VisibleAnywhere, Category = Grid, BlueprintReadOnly)
+		FVector2D InitPosition;
 private:
 
 	/** Dummy root component */

@@ -7,8 +7,7 @@
 ABMBaseActor::ABMBaseActor(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//Replication for multiplayer
 	bReplicates = true;
@@ -27,13 +26,5 @@ ABMBaseActor::ABMBaseActor(const FObjectInitializer& ObjectInitializer)
 	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
 
 	BlockMesh->SetupAttachment(DummyRoot);
-
-}
-
-
-// Called every frame
-void ABMBaseActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
 }

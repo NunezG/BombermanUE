@@ -8,6 +8,8 @@ ABMTimedActor::ABMTimedActor(const FObjectInitializer& ObjectInitializer)
 	, Timer(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+
 	BlockMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	GetBlockMesh()->OnComponentBeginOverlap.AddDynamic(this, &ABMTimedActor::BeginOverlap);
 

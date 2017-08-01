@@ -8,6 +8,7 @@
 #include "BMBlockGrid.h"
 #include "DestructibleInterface.h"
 #include "BMBaseActor.h"
+#include "BMGameMode.h"
 
 // Sets default values
 ABMBlockGrid::ABMBlockGrid()
@@ -68,9 +69,16 @@ void ABMBlockGrid::BeginPlay()
 					{
 						AddActor(vec, SpawnBlock(vec, ABMDestructibleWall::StaticClass()));
 					}
+
+					else if (InitPosition.IsZero())
+					{
+						InitPosition = vec * BlockSpacing;
+					}
 				}
 			}
 		}
+
+		((ABMGameMode*)GetWorld()->GetAuthGameMode())->Init();
 	}
 }
 
@@ -168,10 +176,12 @@ bool ABMBlockGrid::ReachesBlock(FVector2D TargetPosition)
 
 	actor = blocksMap.Find(TargetPosition);
 
+	bool keepSearching = true;
+
 	if (!actor)
 	{
 		SpawnBlock(TargetPosition, ABMExplosionBlock::StaticClass());
-		return true;
+		
 	}
 	else 
 	{
@@ -180,19 +190,18 @@ bool ABMBlockGrid::ReachesBlock(FVector2D TargetPosition)
 		if (destr)
 		{
 
-			destr->OnTouchedByExplosion();
-
 			if ((*actor)->GetClass() == ABMDestructibleWall::StaticClass())
 			{
 				//stops the bomb blast
-				return false;
+				keepSearching = false;
 			}
-			
+
+			destr->OnTouchedByExplosion();					
 		}
 		else return false;
 	}
 
 	//keeps the bomb blast
-	return true;
+	return keepSearching;
 
 }

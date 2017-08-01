@@ -22,5 +22,8 @@ public:
 	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadWrite)
 		ABMBlockGrid* BlockGrid;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void Init();
+
 
 };

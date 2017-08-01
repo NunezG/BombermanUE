@@ -8,7 +8,7 @@ MILESTONES:
 
 	• Static top-down view on the level or camera that pans in/out depending on distance between players in the level (0.5h)
 
-	• Procedural generated maps (1.5h)
+	X • Procedural generated maps (2h)
 
 	• Implementation of different pickups (0.5h)
 		o Longer bomb blasts
